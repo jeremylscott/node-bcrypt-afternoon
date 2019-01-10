@@ -5,7 +5,8 @@ const massive = require('massive')
 const session = require('express-session')
 const {json} = require('body-parser')
 const ac = require('./controllers/authController')
-const treasureController = require('./controllers/treasureController')
+const tc = require('./controllers/treasureController')
+const auth = require('./middleware/authMiddleware')
 const port = 4000
 
 app.use(json())
@@ -27,8 +28,11 @@ app.use(session({
 app.post('/auth/register', ac.register)
 app.post('/auth/login', ac.login)
 app.get('/auth/logout', ac.logout)
-app.get('/api/treasure/dragon', treasureController.dragonTreasure)
-app.get('/api/treasure/user', treasureController.getUserTreasure)
+
+app.post('/api/treasure/user', auth.usersOnly, tc.addUserTreasure)
+app.get('/api/treasure/user', auth.usersOnly, tc.getUserTreasure)
+app.get('/api/treasure/dragon', tc.dragonTreasure)
+app.get('/api/treasure/all', auth.usersOnly, auth.adminsOnly, tc.getAllTreasure)
 
 
 app.listen(port, () => console.log(`Server listening on ${port}`))

@@ -33,14 +33,12 @@ module.exports = {
             if(!isAuthenticated) {
                 res.status(403).json('Incorrect password')
             }
-            else {
-                req.session.user = {
-                    isAdmin: user.is_admin,
-                    id: user.id,
-                    username: user.username
+            req.session.user = {
+                isAdmin: user.is_admin,
+                id: user.id,
+                username: user.username
                 }
                 res.status(200).json(req.session.user)
-            }
         }
     },
 
